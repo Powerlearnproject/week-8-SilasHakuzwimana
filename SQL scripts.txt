@@ -1,0 +1,64 @@
+## SQL scripts
+
+CREATE TABLE Regions (
+    RegionID INT PRIMARY KEY,
+    RegionName VARCHAR(100),
+    Population INT,
+    HealthcareAccessLevel ENUM('Low', 'Medium', 'High')
+);
+
+CREATE TABLE HealthcareFacilities (
+    FacilityID INT PRIMARY KEY,
+    FacilityName VARCHAR(100),
+    RegionID INT,
+    Capacity INT,
+    FOREIGN KEY (RegionID) REFERENCES Regions(RegionID)
+);
+
+CREATE TABLE Patients (
+    PatientID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Age INT,
+    Gender VARCHAR(10),
+    RegionID INT,
+    FOREIGN KEY (RegionID) REFERENCES Regions(RegionID)
+);
+
+CREATE TABLE Services (
+    ServiceID INT PRIMARY KEY,
+    ServiceName VARCHAR(100)
+);
+
+CREATE TABLE PatientServices (
+    PatientServiceID INT PRIMARY KEY,
+    PatientID INT,
+    ServiceID INT,
+    FacilityID INT,
+    ServiceDate DATE,
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID),
+    FOREIGN KEY (FacilityID) REFERENCES HealthcareFacilities(FacilityID)
+);
+
+
+## Sample Data Insertion
+
+INSERT INTO Regions (RegionID, RegionName, Population, HealthcareAccessLevel) VALUES 
+(1, 'Region A', 500000, 'Low'), 
+(2, 'Region B', 300000, 'Medium');
+
+INSERT INTO HealthcareFacilities (FacilityID, FacilityName, RegionID, Capacity) VALUES 
+(1, 'Facility 1', 1, 100), 
+(2, 'Facility 2', 2, 150);
+
+INSERT INTO Patients (PatientID, Name, Age, Gender, RegionID) VALUES 
+(1, 'Jane Doe', 30, 'Female', 1), 
+(2, 'Mary Smith', 28, 'Female', 2);
+
+INSERT INTO Services (ServiceID, ServiceName) VALUES 
+(1, 'Prenatal Care'), 
+(2, 'Postnatal Care');
+
+INSERT INTO PatientServices (PatientServiceID, PatientID, ServiceID, FacilityID, ServiceDate) VALUES 
+(1, 1, 1, 1, '2024-01-01'), 
+(2, 2, 2, 2, '2024-02-01');
